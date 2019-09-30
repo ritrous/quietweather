@@ -126,6 +126,7 @@ Page({
     this.setData({
       openSettingButtonShow: false,
     })
+    console.log("abc");
     wx.stopPullDownRefresh()
     let now = new Date()
     // 存下来源数据
@@ -179,7 +180,9 @@ Page({
       scrollTop: 0,
       duration: 300,
     })
+
     if (val) {
+      console.log("abc");
       this.geocoder(val, loc => {
         this.init({
           location: `${loc.lng},${loc.lat}`
@@ -223,10 +226,13 @@ Page({
       },
     })
   },
+
   fail (res) {
     wx.stopPullDownRefresh()
     let errMsg = res.errMsg || ''
     // console.log(errMsg);
+    console.log("fail 消息");
+    
     // 拒绝授权地理位置权限
     if (errMsg.indexOf('deny') !== -1 || errMsg.indexOf('denied') !== -1) {
       wx.showToast({
@@ -265,10 +271,18 @@ Page({
       return false
     }
   },
+
+  //初始化参数
   init(params) {
+    console.log("初始化参数");
     let BMap = new bmap.BMapWX({
       ak: globalData.ak,
     })
+    console.log(BMap.ak);
+    console.log(params.location);
+    // console.log(BMap.ak);
+    // console.log(BMap.ak);
+
     BMap.weather({
       location: params.location,
       fail: this.fail,
@@ -302,7 +316,10 @@ Page({
       },
     })
   },
+
+  // 获取城市的数据
   getCityDatas() {
+    console.log("get city data");
     let cityDatas = wx.getStorage({
       key: 'cityDatas',
       success: (res) => {
@@ -312,6 +329,8 @@ Page({
       },
     })
   },
+
+  // 
   setBcgImg (index) {
     if (index !== undefined) {
       this.setData({
@@ -350,12 +369,16 @@ Page({
       backgroundColor: this.data.bcgColor,
     })
   },
+
+// 页面入口
   onShow () {
+    console.log("onShow data");
+    console.log(this.initSetting()); //  undefined
     this.setBcgImg()
     this.getCityDatas()
     this.setMenuPosition()
     this.setNavigationBarColor('#2d2225')
-    // this.setBcg()
+    // this.setBcg() 
     this.initSetting((setting) => {
       this.checkUpdate(setting)
     })
@@ -368,10 +391,12 @@ Page({
         searchCity: '',
       })
     }
+    console.log(this.data.cityChanged);
     this.setData({
       message: messages.messages(),
     })
   },
+
   onHide() {
     wx.setStorage({
       key: 'pos',
